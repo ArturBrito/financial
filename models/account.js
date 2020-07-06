@@ -1,84 +1,124 @@
+/**
+ * @author Artur Brito
+ * @email artur.brito95@gmail.com
+ * @create date 07-07-2020 00:36:34
+ * @modify date 07-07-2020 00:36:34
+ * @desc Account Model
+ */
 'user strict';
 
 const sql = require('../startup/db');
 const Joi = require('joi');
 
-//Task object constructor
-var Account = function (account) {
-    this.account_name = account.account_name;
-    this.balance = account.balance;
-};
-
-
+//-- Input schema validation
 function validateAccount(account) {
     const schema = {
         account_name: Joi.string().min(3).required(),
-        balance: Joi.number().required()
+        balance: Joi.number()
     };
-
     return Joi.validate(account, schema);
 }
 
-Account.createAccount = function (newAccount, result) {
-    sql.query("INSERT INTO accounts set ?", newAccount, function (err, res) {
+//-- Account model
+class Account {
+    constructor(account_constructor) {
+        this.account = {
+            account_name: account_constructor.account_name,
+            balance: account_constructor.balance
+        }
+    }
 
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-        }
-        else {
-            console.log(res.insertId);
-            result(null, res.insertId);
-        }
-    });
-};
-Account.getAccountById = function (accountID, result) {
-    sql.query("Select * from accounts where account_id = ? ", accountID, function (err, res) {
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-        }
-        else {
-            result(null, res);
-        }        
-    });
+    /**
+     * Return a Promise<br>
+     * On fulfilled create new account on the database with the instantiated account
+     */
+    createAccount = function () {
+        return new Promise((resolve, reject) => {
+            sql.query("INSERT INTO accounts set ?", this.account, function (err, res) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res.insertId);
+                }
+            });
+        });
+    }
 
-};
-Account.getAllAccounts = function (result) {
-    sql.query("Select * from accounts", function (err, res) {
+    /**
+     * Return a Promise<br>
+     * On fulfilled update account on the database with the instantiated account
+     * @param {Number} id Account ID
+     */
+    updateById = function (id) {
+        return new Promise((resolve, reject) => {
+            sql.query("UPDATE accounts SET ? WHERE account_id = ?", [this.account, id], function (err, res) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res);
+                }
+            });
+        });
+    };
 
-        if (err) {
-            result(err, null);
-        }
-        else {
-            result(null, res);
-        }
-    });
-};
-Account.updateById = function (id, account, result) {
-    sql.query("UPDATE accounts SET balance = ? WHERE account_id = ?", [account.balance, id], function (err, res) {
-        if (err) {
-            console.log("error: ", err);
-            result(null, err);
-        }
-        else {
-            result(null, res);
-        }
-    });
-};
-Account.remove = function (id, result) {
-    sql.query("DELETE FROM accounts WHERE account_id = ?", [id], function (err, res) {
+    /**
+     * Return a Promise<br>
+     * On fulfilled return an account based on given ID
+     * @param {Number} id Account ID
+     */
+    static getAccountById = function (id) {
+        return new Promise((resolve, reject) => {
+            sql.query("Select * from accounts where account_id = ? ", id, function (err, res) {
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res);
+                }
+            });
+        });
+    }
 
-        if (err) {
-            console.log("error: ", err);
-            result(err, null);
-        }
-        else {
+    /**
+     * Return a Promise<br>
+     * On fulfilled return all accounts
+     */
+    static getAllAccounts = function () {
+        return new Promise((resolve, reject) => {
+            sql.query("Select * from accounts", function (err, res) {
 
-            result(null, res);
-        }
-    });
-};
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res);
+                }
+            });
+        });
+    };
+
+    /**
+     * Return a Promise<br>
+     * On fulfilled delete an account based on given ID
+     * @param {Number} id Account ID
+     */
+    static remove = function (id) {
+        return new Promise((resolve, reject) => {
+            sql.query("DELETE FROM accounts WHERE account_id = ?", [id], function (err, res) {
+
+                if (err) {
+                    reject(err);
+                }
+                else {
+                    resolve(res);
+                }
+            });
+        });
+    };
+
+}
 
 exports.Account = Account;
 exports.validate = validateAccount;

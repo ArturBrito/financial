@@ -1,4 +1,5 @@
 {
     "dbPassword": "financial_dbPassword",
-    "dbName": "financial_dbName"
+    "dbName": "financial_dbName",
+    "jwtPrivateKey": "financial_jwtPrivateKey"
 }

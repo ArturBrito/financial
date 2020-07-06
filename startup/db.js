@@ -1,9 +1,17 @@
+/**
+ * @author Artur Brito
+ * @email artur.brito95@gmail.com
+ * @create date 07-07-2020 00:33:28
+ * @modify date 07-07-2020 00:33:28
+ * @desc DB configuration file
+ */
+
 'user strict';
 
 const mysql = require('mysql');
 const config = require('config');
 
-//local mysql db connection
+//-- DB connection
 const connection = mysql.createConnection({
     host: 'localhost',
     user: 'root',  
@@ -11,6 +19,7 @@ const connection = mysql.createConnection({
     database: config.get('dbName')  
 });
 
+// Connect
 connection.connect(function(err) {
     if (err) throw err;
 });

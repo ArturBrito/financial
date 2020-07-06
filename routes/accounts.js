@@ -1,34 +1,30 @@
+/**
+ * @author Artur Brito
+ * @email artur.brito95@gmail.com
+ * @create date 07-07-2020 00:34:38
+ * @modify date 07-07-2020 00:34:38
+ * @desc Accounts routes
+ */
 const express = require('express');
 const router = express.Router();
-const { validate } = require('../models/account');
 const controller = require('../controller/accounts_controller');
+const auth = require('../middleware/auth');
 
-
-router.get('/', async (req, res) => {
+//-- Routes
+router.get('/', auth, async (req, res) => {
     controller.get_all_accounts(req, res);
 });
 
-router.get('/:id', async (req, res) => {
-
+router.get('/:id', auth, async (req, res) => {    
     controller.get_account_by_id(req, res);
 });
 
-router.post('/', (req, res) => {
-
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.post('/', (req, res) => {    
     controller.create_account(req, res);
-
 });
 
-router.put('/:id', (req, res) => {
-
-    const { error } = validate(req.body);
-    if (error) return res.status(400).send(error.details[0].message);
-
+router.put('/:id', (req, res) => {   
     controller.update_account_by_id(req, res);    
-
 });
 
 router.delete('/:id', (req, res) => {
