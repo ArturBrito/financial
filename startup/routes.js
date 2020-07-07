@@ -8,6 +8,7 @@
 
 const accounts = require('../routes/accounts');
 const users = require('../routes/users');
+const facebook = require('../routes/facebook');
 const auth = require('../routes/auth');
 const bodyParser = require('body-parser');
 
@@ -17,5 +18,6 @@ module.exports = function (app) {
     app.use(bodyParser.json());
     app.use('/api/accounts', accounts);
     app.use('/api/users', users);
+    app.use('/api/facebook', facebook);
     app.use('/api/auth', auth);
 }

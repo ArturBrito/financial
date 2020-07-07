@@ -19,7 +19,7 @@ const connection = mysql.createConnection({
     database: config.get('dbName')  
 });
 
-// Connect
+//-- Connect
 connection.connect(function(err) {
     if (err) throw err;
 });

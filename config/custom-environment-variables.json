@@ -1,5 +1,7 @@
 {
     "dbPassword": "financial_dbPassword",
     "dbName": "financial_dbName",
-    "jwtPrivateKey": "financial_jwtPrivateKey"
+    "jwtPrivateKey": "financial_jwtPrivateKey",
+    "facebook_api_key": "financial_facebook_api_key",
+    "facebook_api_secret": "financial_facebook_api_secret"
 }

@@ -1,5 +1,7 @@
 {
     "dbPassword": "",
     "dbName": "",
-    "jwtPrivateKey": ""
+    "jwtPrivateKey": "",
+    "facebook_api_key": "",
+    "facebook_api_secret": ""
 }
