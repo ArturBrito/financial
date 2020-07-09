@@ -10,15 +10,16 @@
 //-- Start facebook API
 require('../startup/facebook_api');
 
+const auth = require('../middleware/auth');
+
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
 session = require('express-session')
 
 router.use(passport.initialize());
-router.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: false }));
-router.use(passport.initialize());
-router.use(passport.session());
+//router.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: false }));
+//router.use(passport.session());
 
 //-- Passport session setup.
 passport.serializeUser(function (user, done) {
@@ -30,7 +31,8 @@ passport.deserializeUser(function (obj, done) {
 
 //-- Facebook API routes
 // If authenticated with FB send message
-router.get('/', ensureAuthenticated, (req, res) => {
+//router.get('/', ensureAuthenticated, (req, res) => {
+router.get('/', auth, (req, res) => {
     //res.render('index', { user: req.user });   
     res.send('Logged with facebook');
 })
@@ -39,12 +41,11 @@ router.get('/', ensureAuthenticated, (req, res) => {
 router.get('/auth', passport.authenticate('facebook', { scope: 'email' }));
 
 // Callback
-router.get('/auth/callback',
-    passport.authenticate('facebook', { successRedirect: '/api/facebook', failureRedirect: '/login' }),
+router.get('/auth/callback', passport.authenticate('facebook', { failureRedirect: '/login' }),
     function (req, res) {
-        res.redirect('/');
-    }
-);
+        res.send(req.user);
+    });
+
 
 // Logout
 router.get('/logout', function (req, res) {
